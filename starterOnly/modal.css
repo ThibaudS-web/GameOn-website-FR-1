@@ -236,7 +236,7 @@ label {
 	font-size: 17px;
 	font-weight: normal;
 	display: inline-block;
-	margin-bottom: 11px;
+	margin: 10px 0;
 }
 input {
 	padding: 8px;
@@ -599,6 +599,26 @@ footer {
 	.btn-signup {
 		padding: 8px 30px;
 		font-size: 1rem;
+	}
+
+	.bground{
+		background-color: unset;
+	}
+
+	.content{
+		margin: 23% auto;
+	}
+
+	.close{
+		top: 10px
+	}
+
+	.label{
+		margin: 10px 0;
+	}
+
+	.text-control{
+		height: 35px;
 	}
 
 	.copyrights {
