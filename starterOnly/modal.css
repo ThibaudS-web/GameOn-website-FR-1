@@ -582,7 +582,7 @@ footer {
 
 .formData .input-error {
 	border: 2px solid red;
-}	
+}
 
 .text-error {
 	color: red;
@@ -659,6 +659,9 @@ footer {
 @media screen and (max-width: 350px) {
 	.header-logo {
 		width: 70%;
+	}
+	.content {
+		margin: 28% auto;
 	}
 }
 
