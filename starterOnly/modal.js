@@ -115,7 +115,6 @@ const validEmail = (input) => {
     let testEmail = emailRegExp.test(input.value)
     const smallEmail = document.querySelector("#error-mail")
     const emailInput = document.querySelector("#email")
-    console.log(smallEmail)
 
     if (!testEmail) {
         smallEmail.textContent = "Veuillez saisir un mail valide"
