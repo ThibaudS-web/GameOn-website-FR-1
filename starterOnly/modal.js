@@ -1,8 +1,14 @@
 function editNav() {
     var x = document.getElementById("myTopnav");
+    let closeBtn = document.querySelector('.fa-xmark')
+    let menuBtn = document.querySelector('.fa-bars')
     if (x.className === "topnav") {
+        menuBtn.classList.add('d-none')
+        closeBtn.classList.remove('d-none')
         x.className += " responsive";
     } else {
+        closeBtn.classList.add('d-none')
+        menuBtn.classList.remove('d-none')
         x.className = "topnav";
     }
 }
@@ -62,70 +68,115 @@ function switchModal() {
     modal.appendChild(btn)
 }
 
+const REGEXP_FORM = {
+    firstname: "^[a-zA-Z]{2,}$",
+    lastname: "^[a-zA-Z]{2,}$",
+    email: "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+}
+
+const ERROR_MESSAGE = {
+    firstname: "Veuillez entrer 2 caractères ou plus pour le champ du prénom.",
+    lastname: "Veuillez entrer 2 caractères ou plus pour le champ du nom.",
+    email: "Veuillez saisir un mail valide"
+}
+
+const INPUTS = {
+    firstname: form.first,
+    lastname: form.last,
+    email: form.email
+}
+
+const SMALL_ELEMENTS = {
+    firstName: document.querySelector('#error-first'),
+    lastName: document.querySelector('#error-last'),
+    email: document.querySelector("#error-mail")
+}
+
+function validation(input, regexpValue, errorMessage, smallElement) {
+    let regexp = new RegExp(
+        regexpValue
+    )
+
+    let testRegexp = regexp.test(input.value)
+    const small = smallElement
+
+    if (!testRegexp) {
+        small.textContent = errorMessage
+        input.classList.add('input-error')
+        return false
+    } else {
+        small.textContent = ""
+        input.classList.remove('input-error')
+        return true
+    }
+}
+
+
+
 
 
 // Validation First Name
-const validFirstName = (input) => {
-    let nameRegExp = new RegExp(
-        '^[a-zA-Z]{2,}$'
-    )
+// const validFirstName = (input) => {
+//     let nameRegExp = new RegExp(
+//         '^[a-zA-Z]{2,}$'
+//     )
 
-    let testName = nameRegExp.test(input.value)
-    const firstNameInput = document.querySelector('#first')
-    const smallFirstName = document.querySelector('#error-first')
+//     let testName = nameRegExp.test(input.value)
+//     const firstNameInput = document.querySelector('#first')
+//     const smallFirstName = document.querySelector('#error-first')
 
-    if (!testName) {
-        smallFirstName.textContent = "Veuillez entrer 2 caractères ou plus pour le champ du prénom."
-        firstNameInput.classList.add('input-error')
-        return false
-    } else {
-        firstNameInput.classList.remove('input-error')
-        smallFirstName.textContent = ""
-        return true
-    }
-}
+//     if (!testName) {
+//         smallFirstName.textContent = "Veuillez entrer 2 caractères ou plus pour le champ du prénom."
+//         firstNameInput.classList.add('input-error')
+//         return false
+//     } else {
+//         firstNameInput.classList.remove('input-error')
+//         smallFirstName.textContent = ""
+//         return true
+//     }
+// }
 
-// Validation Last Name
-const validLastName = (input) => {
-    let nameRegExp = new RegExp(
-        '^[a-zA-Z]{2,}$'
-    )
+// // Validation Last Name
+// const validLastName = (input) => {
+//     let nameRegExp = new RegExp(
+//         '^[a-zA-Z]{2,}$'
+//     )
 
-    let testName = nameRegExp.test(input.value)
-    const lastNameInput = document.querySelector('#last')
-    const smallLastName = document.querySelector('#error-last')
+//     let testName = nameRegExp.test(input.value)
+//     const lastNameInput = document.querySelector('#last')
+//     const smallLastName = document.querySelector('#error-last')
 
-    if (!testName) {
-        smallLastName.textContent = "Veuillez entrer 2 caractères ou plus pour le champ du nom."
-        lastNameInput.classList.add('input-error')
-        return false
-    } else {
-        lastNameInput.classList.remove('input-error')
-        smallLastName.textContent = ""
-        return true
-    }
-}
+//     if (!testName) {
+//         smallLastName.textContent = "Veuillez entrer 2 caractères ou plus pour le champ du nom."
+//         lastNameInput.classList.add('input-error')
+//         return false
+//     } else {
+//         lastNameInput.classList.remove('input-error')
+//         smallLastName.textContent = ""
+//         return true
+//     }
+// }
 
-// Validation Email
-const validEmail = (input) => {
-    let emailRegExp = new RegExp(
-        '^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$'
-    )
+// // Validation Email
+// const validEmail = (input) => {
+//     let emailRegExp = new RegExp(
+//         '^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$'
+//     )
 
-    let testEmail = emailRegExp.test(input.value)
-    const smallEmail = document.querySelector("#error-mail")
-    const emailInput = document.querySelector("#email")
+//     let testEmail = emailRegExp.test(input.value)
+//     const smallEmail = document.querySelector("#error-mail")
+//     const emailInput = document.querySelector("#email")
 
-    if (!testEmail) {
-        smallEmail.textContent = "Veuillez saisir un mail valide"
-        emailInput.classList.add('input-error')
-        return false
-    } else {
-        emailInput.classList.remove("input-error")
-        smallEmail.textContent = ""
-        return true
-    }
-}
+//     if (!testEmail) {
+//         smallEmail.textContent = "Veuillez saisir un mail valide"
+//         emailInput.classList.add('input-error')
+//         return false
+//     } else {
+//         emailInput.classList.remove("input-error")
+//         smallEmail.textContent = ""
+//         return true
+//     }
+// }
 
 // Validation Birthdate
 const validbirthdate = () => {
@@ -198,9 +249,9 @@ const validTerms = () => {
 const formValidation = (event) => {
     event.preventDefault()
 
-    if (validFirstName(form.first) &&
-        validLastName(form.last) &&
-        validEmail(form.email) &&
+    if (validation(INPUTS.firstname, REGEXP_FORM.firstname, ERROR_MESSAGE.firstname, SMALL_ELEMENTS.firstName) &&
+        validation(INPUTS.lastname, REGEXP_FORM.lastname, ERROR_MESSAGE.lastname, SMALL_ELEMENTS.lastName) &&
+        validation(INPUTS.email, REGEXP_FORM.email, ERROR_MESSAGE.email, SMALL_ELEMENTS.email) &&
         validbirthdate() &&
         validTournament() &&
         validLocation() &&
@@ -211,29 +262,47 @@ const formValidation = (event) => {
 
     } else {
 
-        validFirstName(form.first)
-        validLastName(form.last)
-        validEmail(form.email)
+        validation(INPUTS.firstname, REGEXP_FORM.firstname, ERROR_MESSAGE.firstname, SMALL_ELEMENTS.firstName)
+        validation(INPUTS.lastname, REGEXP_FORM.lastname, ERROR_MESSAGE.lastname, SMALL_ELEMENTS.lastName)
+        validation(INPUTS.email, REGEXP_FORM.email, ERROR_MESSAGE.email, SMALL_ELEMENTS.email)
         validbirthdate()
         validTournament()
         validLocation()
         validTerms()
-        
+
         alert('Une erreur est survenue : formulaire invalide, vérifiez chaque champ.')
     }
 }
 
 // EventListeners about the form
 form.first.addEventListener('change', function () {
-    validFirstName(this)
+    validation(this, REGEXP_FORM.firstname, ERROR_MESSAGE.firstname, SMALL_ELEMENTS.firstName)
 })
 form.last.addEventListener('change', function () {
-    validLastName(this)
+    validation(this, REGEXP_FORM.lastname, ERROR_MESSAGE.lastname, SMALL_ELEMENTS.lastName)
 })
 form.email.addEventListener('change', function () {
-    validEmail(this)
+    validation(this, REGEXP_FORM.email, ERROR_MESSAGE.email, SMALL_ELEMENTS.email)
+})
+form.birthdate.addEventListener('change', function () {
+    validbirthdate()
+})
+form.quantity.addEventListener('change', function () {
+    validTournament()
+})
+form.location.forEach(location => {
+    location.addEventListener('change', function () {
+        validLocation()
+    })
+})
+form.terms.addEventListener('change', function () {
+    validTerms()
 })
 
 //Verify the validation before submit
 form.addEventListener('submit', formValidation)
+
+
+
+
 

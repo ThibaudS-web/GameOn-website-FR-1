@@ -130,6 +130,10 @@ a:hover span::after {
 	.fa-bars {
 		color: red;
 	}
+	.fa-xmark {
+		color: red;
+		font-size: 25px;
+	}
 	.header-logo {
 		width: 80%;
 	}
@@ -380,7 +384,7 @@ input[data-error]::after {
 
 @media screen and (max-width: 768px) {
 	.d-none {
-		display: none;
+		display: none !important;
 	}
 }
 
@@ -635,7 +639,7 @@ footer {
 	}
 
 	.content {
-		margin: 22% auto;
+		margin: 20% auto;
 	}
 
 	.close {
