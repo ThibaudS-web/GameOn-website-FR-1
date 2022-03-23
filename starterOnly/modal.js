@@ -22,6 +22,7 @@ const modalContainer = document.querySelector(".content")
 const modal = document.querySelector(".modal-body")
 const form = document.querySelector("form")
 
+const locationContainer = document.querySelector('#locations')
 const btn = document.createElement("button")
 const div = document.createElement("div")
 const p = document.createElement("p")
@@ -68,240 +69,124 @@ function switchModal() {
     modal.appendChild(btn)
 }
 
-const REGEXP_FORM = {
-    firstname: "^[a-zA-Z]{2,}$",
-    lastname: "^[a-zA-Z]{2,}$",
-    email: "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
-}
-
-const ERROR_MESSAGE = {
-    firstname: "Veuillez entrer 2 caractères ou plus pour le champ du prénom.",
-    lastname: "Veuillez entrer 2 caractères ou plus pour le champ du nom.",
-    email: "Veuillez saisir un mail valide"
-}
-
-const INPUTS = {
-    firstname: form.first,
-    lastname: form.last,
-    email: form.email
-}
-
-const SMALL_ELEMENTS = {
-    firstName: document.querySelector('#error-first'),
-    lastName: document.querySelector('#error-last'),
-    email: document.querySelector("#error-mail")
-}
-
-function validation(input, regexpValue, errorMessage, smallElement) {
-    let regexp = new RegExp(
-        regexpValue
-    )
-
-    let testRegexp = regexp.test(input.value)
-    const small = smallElement
-
-    if (!testRegexp) {
-        small.textContent = errorMessage
-        input.classList.add('input-error')
-        return false
-    } else {
-        small.textContent = ""
-        input.classList.remove('input-error')
-        return true
+// Class InputField with 4 attributs and a validation function
+class InputField {
+    constructor(input, errorMessage, errorContainer, validationFunction) {
+        this.input = input
+        this.errorMessage = errorMessage
+        this.errorContainer = errorContainer
+        this.validationFunction = validationFunction
     }
-}
 
-
-
-
-
-// Validation First Name
-// const validFirstName = (input) => {
-//     let nameRegExp = new RegExp(
-//         '^[a-zA-Z]{2,}$'
-//     )
-
-//     let testName = nameRegExp.test(input.value)
-//     const firstNameInput = document.querySelector('#first')
-//     const smallFirstName = document.querySelector('#error-first')
-
-//     if (!testName) {
-//         smallFirstName.textContent = "Veuillez entrer 2 caractères ou plus pour le champ du prénom."
-//         firstNameInput.classList.add('input-error')
-//         return false
-//     } else {
-//         firstNameInput.classList.remove('input-error')
-//         smallFirstName.textContent = ""
-//         return true
-//     }
-// }
-
-// // Validation Last Name
-// const validLastName = (input) => {
-//     let nameRegExp = new RegExp(
-//         '^[a-zA-Z]{2,}$'
-//     )
-
-//     let testName = nameRegExp.test(input.value)
-//     const lastNameInput = document.querySelector('#last')
-//     const smallLastName = document.querySelector('#error-last')
-
-//     if (!testName) {
-//         smallLastName.textContent = "Veuillez entrer 2 caractères ou plus pour le champ du nom."
-//         lastNameInput.classList.add('input-error')
-//         return false
-//     } else {
-//         lastNameInput.classList.remove('input-error')
-//         smallLastName.textContent = ""
-//         return true
-//     }
-// }
-
-// // Validation Email
-// const validEmail = (input) => {
-//     let emailRegExp = new RegExp(
-//         '^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$'
-//     )
-
-//     let testEmail = emailRegExp.test(input.value)
-//     const smallEmail = document.querySelector("#error-mail")
-//     const emailInput = document.querySelector("#email")
-
-//     if (!testEmail) {
-//         smallEmail.textContent = "Veuillez saisir un mail valide"
-//         emailInput.classList.add('input-error')
-//         return false
-//     } else {
-//         emailInput.classList.remove("input-error")
-//         smallEmail.textContent = ""
-//         return true
-//     }
-// }
-
-// Validation Birthdate
-const validbirthdate = () => {
-    const inputBirthdate = document.querySelector('#birthdate')
-    const smallBirthdate = document.querySelector('#error-birthdate')
-    if (inputBirthdate.value.length === 0) {
-        smallBirthdate.textContent = "Veuillez indiquer votre date de naissance"
-        inputBirthdate.classList.add('input-error')
-        return false
-    } else {
-        smallBirthdate.textContent = ""
-        inputBirthdate.classList.remove('input-error')
-        return true
-    }
-}
-
-// Validation Tournament
-const validTournament = () => {
-    const inputTournament = document.querySelector('#quantity')
-    const smallTournament = document.querySelector('#error-tournament')
-
-    if (inputTournament.value.length === 0) {
-        smallTournament.textContent = "Veuillez indiquer le nombre de tournois auquels vous avez participé"
-        inputTournament.classList.add('input-error')
-        return false
-    } else {
-        smallTournament.textContent = ""
-        inputTournament.classList.remove('input-error')
-        return true
-    }
-}
-
-// Validation Location
-const validLocation = () => {
-    const arrayInputs = document.querySelectorAll('#locations input')
-    const smallLocation = document.querySelector('#error-location')
-    const inputChecked = []
-
-    arrayInputs.forEach(input => {
-        if (input.checked) {
-            inputChecked.push(input)
+    validate() {
+        let valid = this.validationFunction(this.input)
+        if (valid) {
+            this.errorContainer.textContent = ""
+            this.input.classList.remove('input-error')
+        } else {
+            this.errorContainer.textContent = this.errorMessage
+            this.input.classList.add('input-error')
         }
-    });
-
-    if (inputChecked.length > 0) {
-        smallLocation.textContent = ""
-        return true
-    } else {
-        smallLocation.textContent = "Veuillez choisir une destination pour votre inscription"
-        return false
+        return valid
     }
 }
 
-// Validation Terms of use
-const validTerms = () => {
-    const termsInput = document.querySelector('#checkbox1')
-    const smallTerms = document.querySelector('#error-terms')
+//######## Create new instances for specific field handling
 
-    if (!termsInput.checked) {
-        smallTerms.textContent = "Veuillez cocher les conditions d'utilisations"
-        return false
-    } else {
-        smallTerms.textContent = ""
-        return true
-    }
+//New instance of InputField class for firstname input
+const firstNameField = new InputField(form.first, "Veuillez entrer 2 caractères ou plus pour le champ du prénom.", document.querySelector('#error-first'), (input) => {
+    let regexp = new RegExp(
+        "^[a-zA-Z]{2,}$"
+    )
+    return regexp.test(input.value)
+})
 
-}
+//New instance of InputField class for lastname input
+const lastNameField = new InputField(form.last, "Veuillez entrer 2 caractères ou plus pour le champ du nom.", document.querySelector('#error-last'), (input) => {
+    let regexp = new RegExp(
+        "^[a-zA-Z]{2,}$"
+    )
+    return regexp.test(input.value)
+})
+
+//New instance of InputField class for email input
+const emailField = new InputField(form.email, "Veuillez saisir un mail valide", document.querySelector("#error-mail"), (input) => {
+    let regexp = new RegExp(
+        "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$")
+    return regexp.test(input.value)
+})
+
+//New instance of InputField class for birthdate input
+const birthdateField = new InputField(form.birthdate, "Veuillez indiquer votre date de naissance", document.querySelector('#error-birthdate'), (input) => {
+    return input.value.length > 0
+})
+
+//New instance of InputField class for tournament input
+const tournamentField = new InputField(form.quantity, "Veuillez indiquer le nombre de tournois auquels vous avez participé", document.querySelector('#error-tournament'), (input) => {
+    return input.value.length > 0
+})
+
+//New instance of InputField class for location container
+const locationsField = new InputField(locationContainer, "Veuillez choisir une destination pour votre inscription", document.querySelector('#error-location'), (inputContainer) => {
+    return Array.from(document.querySelectorAll('#locations input')).some((input) => { return input.checked })
+})
+
+//New instance of InputField class for terms input
+const termsField = new InputField(form.terms, "Veuillez cocher les conditions d'utilisations", document.querySelector('#error-terms'), (input) => {
+    return input.checked
+})
+
+//Array for store boolean value. If element is true, the field validation is true.
+const FIELDS = [firstNameField, lastNameField, emailField, birthdateField, tournamentField, locationsField, termsField]
 
 //Validation Form
 const formValidation = (event) => {
     event.preventDefault()
 
-    if (validation(INPUTS.firstname, REGEXP_FORM.firstname, ERROR_MESSAGE.firstname, SMALL_ELEMENTS.firstName) &&
-        validation(INPUTS.lastname, REGEXP_FORM.lastname, ERROR_MESSAGE.lastname, SMALL_ELEMENTS.lastName) &&
-        validation(INPUTS.email, REGEXP_FORM.email, ERROR_MESSAGE.email, SMALL_ELEMENTS.email) &&
-        validbirthdate() &&
-        validTournament() &&
-        validLocation() &&
-        validTerms()
-    ) {
+    let validForm = true
+    //Iteration to verify that each field is valid
+    FIELDS.forEach((field) => {
+        validForm = field.validate() && validForm
+    })
+
+    if (validForm) {
 
         switchModal()
 
     } else {
 
-        validation(INPUTS.firstname, REGEXP_FORM.firstname, ERROR_MESSAGE.firstname, SMALL_ELEMENTS.firstName)
-        validation(INPUTS.lastname, REGEXP_FORM.lastname, ERROR_MESSAGE.lastname, SMALL_ELEMENTS.lastName)
-        validation(INPUTS.email, REGEXP_FORM.email, ERROR_MESSAGE.email, SMALL_ELEMENTS.email)
-        validbirthdate()
-        validTournament()
-        validLocation()
-        validTerms()
-
         alert('Une erreur est survenue : formulaire invalide, vérifiez chaque champ.')
+
     }
 }
 
-// EventListeners about the form
+//Change EventListeners about the form
 form.first.addEventListener('change', function () {
-    validation(this, REGEXP_FORM.firstname, ERROR_MESSAGE.firstname, SMALL_ELEMENTS.firstName)
+    firstNameField.validate()
 })
 form.last.addEventListener('change', function () {
-    validation(this, REGEXP_FORM.lastname, ERROR_MESSAGE.lastname, SMALL_ELEMENTS.lastName)
+    lastNameField.validate()
 })
 form.email.addEventListener('change', function () {
-    validation(this, REGEXP_FORM.email, ERROR_MESSAGE.email, SMALL_ELEMENTS.email)
+    emailField.validate()
 })
 form.birthdate.addEventListener('change', function () {
-    validbirthdate()
+    birthdateField.validate()
 })
 form.quantity.addEventListener('change', function () {
-    validTournament()
+    tournamentField.validate()
 })
 form.location.forEach(location => {
     location.addEventListener('change', function () {
-        validLocation()
+        locationsField.validate()
     })
 })
 form.terms.addEventListener('change', function () {
-    validTerms()
+    termsField.validate()
 })
 
 //Verify the validation before submit
 form.addEventListener('submit', formValidation)
-
 
 
 
