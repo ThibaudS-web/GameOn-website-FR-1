@@ -14,7 +14,6 @@ body {
 	margin: 0;
 	display: flex;
 	flex-direction: column;
-	background-image: url("background.png");
 	font-family: var(--font-default);
 	font-size: 18px;
 	max-width: 1300px;
@@ -473,7 +472,7 @@ input[data-error]::after {
 }
 .hero-content {
 	padding: 51px 67px;
-	grid-column: span 4;
+	grid-column: span 5;
 	background: #232323;
 	color: #fff;
 	position: relative;
@@ -511,7 +510,8 @@ input[data-error]::after {
 	margin-top: 59px;
 }
 .hero-img {
-	grid-column: span 8;
+	grid-column: span 7;
+	z-index: 0;
 }
 .hero-img img {
 	width: 100%;
